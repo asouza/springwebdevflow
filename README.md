@@ -134,6 +134,15 @@ public class FormFlowTest {
 	}
 	
 	@Test
+	public void shouldSaveFormSyncWithExtraArgs() {
+		TeamFormTest form = new TeamFormTest();
+		form.setName("test");
+		formFlow.save(form,new CustomObject()).andThen(team -> {
+			//faça o que precisar
+		});
+	}	
+	
+	@Test
 	public void shouldSaveFormAsync() {
 		TeamFormTest form = new TeamFormTest();
 		form.setName("test");
