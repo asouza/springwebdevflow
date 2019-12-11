@@ -171,11 +171,17 @@ public final class DataView<T> {
 		DataView<ReturnType> viewOfComplexProperty = DataView.of(complexProperty);
 		for (Function<ReturnType, Object> mapper : propertyMappers) {
 			
-			Function<ReturnType, String> toStringMapper = object -> {
+			Function<ReturnType, String> onlyAllowedSimpleJavaTypesMapper = object -> {
+				Object mappedProperty = mapper.apply(object);
+				String packageName = mappedProperty.getClass().getPackage().getName();
+				
+				boolean isJavaSimpleType = packageName.startsWith("java") && !(mappedProperty instanceof Collection);
+				Assert.isTrue(isJavaSimpleType,"Your mapping is too complex already. Create your custom DTO and use the add method");
+				
 				return mapper.apply(object).toString();
 			};
 			
-			viewOfComplexProperty.add(toStringMapper);
+			viewOfComplexProperty.add(onlyAllowedSimpleJavaTypesMapper);
 		}
 		return viewOfComplexProperty;
 	}
