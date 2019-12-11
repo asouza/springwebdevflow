@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.util.Assert;
 
 class Trace implements MethodInterceptor {
 
@@ -19,8 +20,9 @@ class Trace implements MethodInterceptor {
 
 	@Override
 	public Object intercept(Object proxy, Method currentMethod, Object[] args, MethodProxy proxyMethod)
-			throws Throwable {
+			throws Throwable {		
 		String methodName = currentMethod.getName();
+		Assert.isTrue(methodName.startsWith("is") || methodName.startsWith("get"),"Your method must start with is or get to be used as part of DataView generation");
 		String propertyName = Introspector.decapitalize(methodName.substring(methodName.startsWith("is") ? 2 : 3));
 		Object methodResult = currentMethod.invoke(instance, args);
 		json.put(propertyName, methodResult);
