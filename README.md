@@ -156,7 +156,7 @@ Caso tenha gostado e queira colaborar, fala comigo no <a href="https://twitter.c
 ## Caso queira testar por agora
 
 * Clone o repositório
-* Instale o projeto como dependencia local no seu computador
+* Instale o projeto como dependencia local no seu computador (mvn install a partir da pasta do springwebdev)
 * Adicione a dependencia no seu projeto (já mostro)
 * Caso vá usar o DataView, olhe os exemplos :)
 * Caso vá usar o FormFlow, receba ele injetado no seu controller ```@Autowired FormFlow<AlgumaEntidade> formFlow``` e olhe os exemplos  
