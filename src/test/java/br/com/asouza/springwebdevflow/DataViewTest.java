@@ -20,7 +20,13 @@ public class DataViewTest {
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> DataView.of(new WithoutEmptyConstructorObject("")));
 	}
-
+	
+	@Test
+	public void methodShouldStartWithGetOrIs() {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> DataView.of(new Team("")).add(Team :: someMethod));		
+	}
+	
 	@Test
 	public void shouldExportSimpleProperties() {
 		Team team = new Team("bla");

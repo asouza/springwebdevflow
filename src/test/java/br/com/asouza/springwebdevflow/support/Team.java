@@ -60,5 +60,9 @@ public class Team {
 		return property4;
 	}
 	
+	
+	public String someMethod() {
+		return "";
+	}
 
 }
