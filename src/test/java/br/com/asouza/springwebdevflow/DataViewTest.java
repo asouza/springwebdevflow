@@ -87,7 +87,7 @@ public class DataViewTest {
 	}
 	
 	@Test
-	public void shouldExportMappedCollectionProperties2() {
+	public void shouldExportMappedCollectionPropertiesWithoutExtraDto() {
 		Team team = new Team("bla");
 		team.setProperty2("ble");
 		ComplexProperty complexProperty = new ComplexProperty();
@@ -103,5 +103,23 @@ public class DataViewTest {
 		Assertions.assertEquals("bla", result.get("name"));
 		Assertions.assertEquals("ble", result.get("property2"));
 		Assertions.assertEquals("opa", ((List<Map>)result.get("custom")).get(0).get("property1"));
+	}
+	
+	@Test
+	public void shouldExportMappedPropertiesWithoutExtraDto() {
+		Team team = new Team("bla");
+		team.setProperty2("ble");
+		ComplexProperty complexProperty = new ComplexProperty();
+		complexProperty.setProperty1("opa");
+		team.setProperty3(complexProperty);
+		Map<String, Object> result = DataView.of(team)
+				.add(Team::getName)
+				.add(Team :: getProperty2)
+				.add2("custom", t -> (ComplexProperty)team.getProperty3(), ComplexProperty :: getProperty1)
+				.build();
+		Assertions.assertEquals("bla", result.get("name"));
+		Assertions.assertEquals("ble", result.get("property2"));
+		Assertions.assertEquals("opa", ((Map)result.get("custom")).get("property1"));
 	}	
 }
+

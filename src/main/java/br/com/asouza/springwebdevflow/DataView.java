@@ -146,6 +146,37 @@ public final class DataView<T> {
 
 	/**
 	 * 
+	 * @param <ReturnType>    type to be used as input for the mapper method
+	 * @param key             custom key to be generated
+	 * @param function        to call the method which follows the Java Beans
+	 *                        pattern.
+	 * @param propertyMappers mappers to each property of the returned object
+	 * @return
+	 */
+	@SafeVarargs
+	public final <ReturnType> DataView<T> add2(String key, Function<T, ReturnType> supplier,
+			Function<ReturnType, Object>... propertyMappers) {
+		ReturnType complexProperty = supplier.apply(original);
+
+		DataView<ReturnType> viewOfComplexProperty = dataViewOfAComplextProperty(complexProperty, propertyMappers);
+
+		complexValues.put(key, viewOfComplexProperty.build());
+
+		return this;
+	}
+
+	@SafeVarargs
+	private final <ReturnType> DataView<ReturnType> dataViewOfAComplextProperty(ReturnType complexProperty,
+			Function<ReturnType, Object>... propertyMappers) {
+		DataView<ReturnType> viewOfComplexProperty = DataView.of(complexProperty);
+		for (Function<ReturnType, Object> mapper : propertyMappers) {
+			viewOfComplexProperty.add(mapper);
+		}
+		return viewOfComplexProperty;
+	}
+
+	/**
+	 * 
 	 * @param <ReturnType> type to be used as input for the mapper method
 	 * @param <MapperType> type which will be returned by the mapper function
 	 * @param key          custom key to be generated
@@ -154,8 +185,8 @@ public final class DataView<T> {
 	 *                     collection of objects
 	 * @return
 	 */
-	public final <ReturnType, MapperType> DataView<T> addCollection(String key, Function<T, Collection<ReturnType>> function,
-			Function<ReturnType, MapperType> mapper) {
+	public final <ReturnType, MapperType> DataView<T> addCollection(String key,
+			Function<T, Collection<ReturnType>> function, Function<ReturnType, MapperType> mapper) {
 
 		Collection<ReturnType> collection = function.apply(original);
 		// using list to keep the original order
@@ -165,23 +196,25 @@ public final class DataView<T> {
 		return this;
 	}
 
-	
+	/**
+	 * 
+	 * @param <ReturnType>    type of the getterMethod for the complex object
+	 * @param key             custom key to be generated
+	 * @param function        to call the method which follows the Java Beans
+	 *                        pattern.
+	 * @param propertyMappers mappers to each property of the returned object
+	 * @return
+	 */
 	@SafeVarargs
 	public final <ReturnType> DataView<T> addCollection2(String key, Function<T, Collection<ReturnType>> function,
-			  Function<ReturnType, Object>...  propertyMappers) {
-		
-		Collection<ReturnType> collection = function.apply(original);
-		
-		List<Map<String, Object>> collectionObjectProperties = collection.stream().map(object -> {
+			Function<ReturnType, Object>... propertyMappers) {
 
-			DataView<ReturnType> propertiesOfReturnedType = DataView.of(object);
-			for(Function<ReturnType,Object> propertyMapper : propertyMappers) {
-				propertiesOfReturnedType.add(propertyMapper);
-			}
-			
-			return propertiesOfReturnedType.build();
+		Collection<ReturnType> collection = function.apply(original);
+
+		List<Map<String, Object>> collectionObjectProperties = collection.stream().map(object -> {
+			return dataViewOfAComplextProperty(object, propertyMappers).build();
 		}).collect(Collectors.toList());
-		
+
 		complexValues.put(key, collectionObjectProperties);
 		return this;
 	}
