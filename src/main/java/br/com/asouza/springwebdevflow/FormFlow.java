@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
@@ -25,7 +24,6 @@ import org.springframework.util.Assert;
  *
  * @param <T> Type of the Domain Object expecting to be created
  */
-@Component
 public class FormFlow<T> {
 
 	private BeanFactory ctx;
