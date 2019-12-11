@@ -42,14 +42,14 @@ public class FormFlowCrudMethods<T> {
 
 	/**
 	 * 
-	 * @param domainObject instance of the domain object which we should work with
+	 * @param domainObjectClass class of instance of the domain object which we should work with
 	 * @param repositories {@link Repositories}
 	 * @param beanFactory {@link BeanFactory}
 	 * @return {@link FormFlowCrudMethods} prepared to work on top of the current domain object
 	 */
-	public static <T> FormFlowCrudMethods<T> create(T domainObject, Repositories repositories, BeanFactory beanFactory) {
-		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),"Your domain object must be annotaded with @Entity");
-		Optional<Object> possibleDomainRepository = repositories.getRepositoryFor(domainObject.getClass());
+	public static <T> FormFlowCrudMethods<T> create(Class<T> domainObjectClass, Repositories repositories, BeanFactory beanFactory) {
+		Assert.notNull(domainObjectClass.getAnnotation(Entity.class),"Your domain object must be annotaded with @Entity");
+		Optional<Object> possibleDomainRepository = repositories.getRepositoryFor(domainObjectClass);
 		
 		if(possibleDomainRepository.isPresent()) {		
 			Assert.state(possibleDomainRepository.get() instanceof CrudRepository,

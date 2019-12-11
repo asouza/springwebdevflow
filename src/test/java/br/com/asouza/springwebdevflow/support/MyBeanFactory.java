@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -12,6 +14,17 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ResolvableType;
 
 public class MyBeanFactory implements ListableBeanFactory {
+	
+	private FakeEntityManager fakeManager;
+
+	public MyBeanFactory() {
+		this.fakeManager = new FakeEntityManager();
+	}
+	
+	public MyBeanFactory(FakeEntityManager fakeManager) {
+		this.fakeManager = fakeManager;
+		
+	}
 
 	@Override
 	public Object getBean(String name) throws BeansException {
@@ -34,7 +47,7 @@ public class MyBeanFactory implements ListableBeanFactory {
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws BeansException {
 		if (!TeamRepository.class.isAssignableFrom(requiredType)
-				&& !TeamRepository2.class.isAssignableFrom(requiredType)) {
+				&& !TeamRepository2.class.isAssignableFrom(requiredType) && !EntityManager.class.isAssignableFrom(requiredType)) {
 			throw new NoSuchBeanDefinitionException(requiredType);
 		}
 
@@ -107,6 +120,10 @@ public class MyBeanFactory implements ListableBeanFactory {
 					return null;
 				}
 			};
+		}
+		
+		if(EntityManager.class.isAssignableFrom(requiredType)) {
+			return (T)this.fakeManager;
 		}
 		
 		return (T)new TeamRepository2() {

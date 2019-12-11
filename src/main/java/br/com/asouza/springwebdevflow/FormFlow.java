@@ -76,9 +76,9 @@ public class FormFlow<T> {
 		});
 
 		try {
-			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());	
-			//FIXME pass domainObject twice is not good, I know. But is easier pass the object than the class of it
-			return new ToModelStep(domainObject,FormFlowCrudMethods.create(domainObject, repositories, ctx), flowAsyncExecutor);
+			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());
+			Class<T> domainClass = (Class<T>) domainObject.getClass();
+			return new ToModelStep(domainObject,FormFlowCrudMethods.create(domainClass, repositories, ctx), flowAsyncExecutor);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
