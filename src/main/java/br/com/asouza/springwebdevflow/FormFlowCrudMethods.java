@@ -3,6 +3,7 @@ package br.com.asouza.springwebdevflow;
 import java.util.Optional;
 import java.util.function.Function;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 
 import org.hibernate.resource.beans.container.internal.NoSuchBeanException;
@@ -12,20 +13,43 @@ import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.Assert;
 
 
+/**
+ * Abstraction to work with crud methods. Just a wrapper
+ * @author alberto
+ *
+ * @param <T> type of the entity which crud methods should work
+ */
 public class FormFlowCrudMethods<T> {
 	
 	private Function<T, T> save;
 
+	/**
+	 * 
+	 * @param save function to save instance of T
+	 */
 	public FormFlowCrudMethods(Function<T, T> save) {
 		this.save = save;
 	}
 	
+	/**
+	 * 
+	 * @param entity save entity
+	 * @return saved entity
+	 */
 	public T save(T entity) {
 		return save.apply(entity);
 	}
 
-	public static <T> FormFlowCrudMethods<T> create(Class<T> domainObjectClass, Repositories repositories, BeanFactory beanFactory) {
-		Optional<Object> possibleDomainRepository = repositories.getRepositoryFor(domainObjectClass);
+	/**
+	 * 
+	 * @param domainObject instance of the domain object which we should work with
+	 * @param repositories {@link Repositories}
+	 * @param beanFactory {@link BeanFactory}
+	 * @return {@link FormFlowCrudMethods} prepared to work on top of the current domain object
+	 */
+	public static <T> FormFlowCrudMethods<T> create(T domainObject, Repositories repositories, BeanFactory beanFactory) {
+		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),"Your domain object must be annotaded with @Entity");
+		Optional<Object> possibleDomainRepository = repositories.getRepositoryFor(domainObject.getClass());
 		
 		if(possibleDomainRepository.isPresent()) {		
 			Assert.state(possibleDomainRepository.get() instanceof CrudRepository,

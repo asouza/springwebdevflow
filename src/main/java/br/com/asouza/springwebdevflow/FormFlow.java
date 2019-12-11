@@ -76,13 +76,19 @@ public class FormFlow<T> {
 		});
 
 		try {
-			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());
-			return new ToModelStep(domainObject, repositories, ctx, flowAsyncExecutor);
+			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());	
+			//FIXME pass domainObject twice is not good, I know. But is easier pass the object than the class of it
+			return new ToModelStep(domainObject,FormFlowCrudMethods.create(domainObject, repositories, ctx), flowAsyncExecutor);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	/**
+	 * 
+	 * @param params extra args that should be passed for toModel method. 
+	 * @return just the formFlow 
+	 */
 	public FormFlow<T> extraArgs(Object... params) {
 		Stream.of(params).forEach(extraArg -> {
 			this.extraArgs.put(extraArg.getClass(), extraArg);
@@ -90,6 +96,11 @@ public class FormFlow<T> {
 		return this;
 	}
 
+	/**
+	 * 
+	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T> 
+	 * @return {@link FormFlowManagedEntity} with saved instance of the Domain Object created from the form
+	 */
 	public FormFlowManagedEntity<T> save(Object form) {
 		return toModel(form).save();
 	}

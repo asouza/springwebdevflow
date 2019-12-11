@@ -2,8 +2,6 @@ package br.com.asouza.springwebdevflow;
 
 import javax.persistence.Entity;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.Assert;
 
 /**
@@ -19,14 +17,11 @@ public class ToModelStep<T> {
 	private FormFlowCrudMethods<T> crudMethods;
 
 
-	@SuppressWarnings("unchecked")
-	public ToModelStep(T domainObject, Repositories repositories,BeanFactory beanFactory, FormFlowAsyncExecutor flowAsyncExecutor) {
+	public ToModelStep(T domainObject,FormFlowCrudMethods<T> crudMethods,FormFlowAsyncExecutor flowAsyncExecutor) {
 		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),"Your domain object must be annotaded with @Entity");
-		
-		this.flowAsyncExecutor = flowAsyncExecutor;
 		this.domainObject = domainObject;
-		Class<T> clazz = (Class<T>) domainObject.getClass();
-		this.crudMethods = FormFlowCrudMethods.create(clazz,repositories,beanFactory);
+		this.crudMethods = crudMethods;
+		this.flowAsyncExecutor = flowAsyncExecutor;		
 	}
 	
 	public FormFlowManagedEntity<T> save() {				
