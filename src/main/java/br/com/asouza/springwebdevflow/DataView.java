@@ -49,7 +49,7 @@ public final class DataView<T> {
 	 * @param function to call the method which follows the Java Beans pattern.
 	 * @return
 	 */
-	public final DataView<T> add(Function<T, Object> function) {
+	public final DataView<T> add(Function<T, ? extends Object> function) {
 		function.apply(proxy);
 		return this;
 	}
@@ -61,7 +61,7 @@ public final class DataView<T> {
 	 *                 pattern.
 	 * @return
 	 */
-	public final DataView<T> add(String key, Function<T, Object> function) {
+	public final DataView<T> add(String key, Function<T, ? extends  Object> function) {
 		complexValues.put(key, function.apply(original));
 		return this;
 	}
@@ -144,13 +144,13 @@ public final class DataView<T> {
 		return this;
 	}
 
-	/**
+	/**	 
 	 * 
 	 * @param <ReturnType>    type to be used as input for the mapper method
 	 * @param key             custom key to be generated
 	 * @param function        to call the method which follows the Java Beans
 	 *                        pattern.
-	 * @param propertyMappers mappers to each property of the returned object
+	 * @param propertyMappers mappers to each property of the returned object. Do not map here to collection or a application objects  
 	 * @return
 	 */
 	@SafeVarargs
@@ -170,7 +170,12 @@ public final class DataView<T> {
 			Function<ReturnType, Object>... propertyMappers) {
 		DataView<ReturnType> viewOfComplexProperty = DataView.of(complexProperty);
 		for (Function<ReturnType, Object> mapper : propertyMappers) {
-			viewOfComplexProperty.add(mapper);
+			
+			Function<ReturnType, String> toStringMapper = object -> {
+				return mapper.apply(object).toString();
+			};
+			
+			viewOfComplexProperty.add(toStringMapper);
 		}
 		return viewOfComplexProperty;
 	}
@@ -202,7 +207,7 @@ public final class DataView<T> {
 	 * @param key             custom key to be generated
 	 * @param function        to call the method which follows the Java Beans
 	 *                        pattern.
-	 * @param propertyMappers mappers to each property of the returned object
+	 * @param propertyMappers mappers to each property of the returned object. Do not map here to collection or a application objects
 	 * @return
 	 */
 	@SafeVarargs
