@@ -39,7 +39,7 @@ public class FormFlowTest {
 	}
 
 	@Test
-	public void mustCallExtraArgsForApplicationCustomArgs() {
+	public void mustPassExtraArgsForApplicationCustomArgs() {
 		Assertions.assertThrows(RuntimeException.class, () -> formFlow.toModel(new FormTestExtraArgs()));
 	}
 	
@@ -78,7 +78,7 @@ public class FormFlowTest {
 		FormTestExtraArgs form = new FormTestExtraArgs();
 		form.setName("test");
 		
-		ToModelStep<Team> toModelResult = formFlow.extraArgs(new Team("extraArg")).toModel(form);
+		ToModelStep<Team> toModelResult = formFlow.toModel(form,new Team("extraArg"));
 		
 		Team team = toModelResult.getDomainObject();
 		Assertions.assertEquals("test", team.getName());		

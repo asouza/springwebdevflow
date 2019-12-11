@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.Assert;
 
@@ -25,13 +24,11 @@ import org.springframework.util.Assert;
  *
  * @param <T> Type of the Domain Object expecting to be created
  */
-@Scope("prototype")
 public class FormFlow<T> {
 
 	private BeanFactory ctx;
 	private Repositories repositories;
 	private FormFlowAsyncExecutor flowAsyncExecutor;
-	private Map<Class<? extends Object>, Object> extraArgs = new HashMap<>();
 
 	private static final Logger log = LoggerFactory.getLogger(FormFlow.class);
 
@@ -41,13 +38,14 @@ public class FormFlow<T> {
 		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
 
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	/**
 	 * 
 	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T>
 	 * @return The ToModelStep holding the DomainObject 
 	 */
-	public ToModelStep<T> toModel(Object form) {
+	public ToModelStep<T> toModel(Object form,Object... extraArgs) {
 		Method[] methods = form.getClass().getMethods();
 		Set<Method> toModels = Stream.of(methods).filter(method -> method.getName().equals("toModel"))
 				.collect(Collectors.toSet());
@@ -59,11 +57,14 @@ public class FormFlow<T> {
 		Class<?>[] parameterTypes = toModelMethod.getParameterTypes();
 
 		List<Object> resolvedParameters = new ArrayList<>();
+		
+		Map<Class<? extends Object>, Object> extraArgsParameters = populateExtraArgsIfExists(extraArgs);		
+		
 
 		Stream.of(parameterTypes).forEach(parameterType -> {
-			if (extraArgs.containsKey(parameterType)) {
+			if (extraArgsParameters.containsKey(parameterType)) {
 				log.debug("Resolving extra arg toModel parameter type {}",parameterType);
-				resolvedParameters.add(extraArgs.get(parameterType));
+				resolvedParameters.add(extraArgsParameters.get(parameterType));
 			} else {
 				log.debug("testing if Spring is able to lookup {}", parameterType);
 				try {
@@ -84,25 +85,23 @@ public class FormFlow<T> {
 		}
 	}
 
-	/**
-	 * 
-	 * @param params extra args that should be passed for toModel method. 
-	 * @return just the formFlow 
-	 */
-	public FormFlow<T> extraArgs(Object... params) {
-		Stream.of(params).forEach(extraArg -> {
-			this.extraArgs.put(extraArg.getClass(), extraArg);
+
+	private Map<Class<? extends Object>, Object> populateExtraArgsIfExists(Object... extraArgs) {
+		Map<Class<? extends Object>, Object> extraArgsParameters = new HashMap<>();
+		Stream.of(extraArgs).forEach(extraArg -> {
+			extraArgsParameters.put(extraArg.getClass(), extraArg);
 		});
-		return this;
+		return extraArgsParameters;
 	}
 
 	/**
 	 * 
-	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T> 
+	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T>
+	 * @param extraArgs custom application arguments for toModel. Ex: current logged user 
 	 * @return {@link FormFlowManagedEntity} with saved instance of the Domain Object created from the form
 	 */
-	public FormFlowManagedEntity<T> save(Object form) {
-		return toModel(form).save();
+	public FormFlowManagedEntity<T> save(Object form, Object...extraArgs) {
+		return toModel(form,extraArgs).save();
 	}
 
 }
