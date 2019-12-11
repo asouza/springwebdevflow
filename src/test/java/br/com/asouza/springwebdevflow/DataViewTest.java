@@ -84,5 +84,24 @@ public class DataViewTest {
 		Assertions.assertEquals("bla", result.get("name"));
 		Assertions.assertEquals("ble", result.get("property2"));
 		Assertions.assertEquals("opa", ((List<ComplexPropertyDTO>)result.get("custom")).get(0).getProperty1());
+	}
+	
+	@Test
+	public void shouldExportMappedCollectionProperties2() {
+		Team team = new Team("bla");
+		team.setProperty2("ble");
+		ComplexProperty complexProperty = new ComplexProperty();
+		complexProperty.setProperty1("opa");
+		team.setProperty4(Arrays.asList(complexProperty));
+		
+		Map<String, Object> result = DataView.of(team)
+				.add(Team::getName)
+				.add(Team :: getProperty2)
+				.addCollection2("custom", Team :: getProperty4, ComplexProperty :: getProperty1)
+				.build();
+		
+		Assertions.assertEquals("bla", result.get("name"));
+		Assertions.assertEquals("ble", result.get("property2"));
+		Assertions.assertEquals("opa", ((List<Map>)result.get("custom")).get(0).get("property1"));
 	}	
 }
