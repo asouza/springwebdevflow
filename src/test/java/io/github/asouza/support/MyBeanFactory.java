@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow.support;
+package io.github.asouza.support;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;

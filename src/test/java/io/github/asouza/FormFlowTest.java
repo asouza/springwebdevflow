@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
-import br.com.asouza.springwebdevflow.support.FormTest;
-import br.com.asouza.springwebdevflow.support.FormTestExtraArgs;
-import br.com.asouza.springwebdevflow.support.FormTestWithToModelWithoutArgs;
-import br.com.asouza.springwebdevflow.support.FormTestWithTwoResolvableTypes;
-import br.com.asouza.springwebdevflow.support.FormTestWithTwoToModels;
-import br.com.asouza.springwebdevflow.support.FormTestWithoutToModel;
-import br.com.asouza.springwebdevflow.support.MyBeanFactory;
-import br.com.asouza.springwebdevflow.support.Team;
-import br.com.asouza.springwebdevflow.support.TestRepositories;
 import io.github.asouza.FormFlow;
 import io.github.asouza.FormFlowAsyncExecutor;
 import io.github.asouza.ToModelStep;
+import io.github.asouza.support.FormTest;
+import io.github.asouza.support.FormTestExtraArgs;
+import io.github.asouza.support.FormTestWithToModelWithoutArgs;
+import io.github.asouza.support.FormTestWithTwoResolvableTypes;
+import io.github.asouza.support.FormTestWithTwoToModels;
+import io.github.asouza.support.FormTestWithoutToModel;
+import io.github.asouza.support.MyBeanFactory;
+import io.github.asouza.support.Team;
+import io.github.asouza.support.TestRepositories;
 
 public class FormFlowTest {
 

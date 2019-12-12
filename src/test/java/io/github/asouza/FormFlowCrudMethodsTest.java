@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
-import br.com.asouza.springwebdevflow.support.FakeCrudRepository;
-import br.com.asouza.springwebdevflow.support.FakeEntityManager;
-import br.com.asouza.springwebdevflow.support.Goal;
-import br.com.asouza.springwebdevflow.support.MyBeanFactory;
-import br.com.asouza.springwebdevflow.support.NonEntity;
-import br.com.asouza.springwebdevflow.support.Team;
-import br.com.asouza.springwebdevflow.support.TestRepositories;
 import io.github.asouza.FormFlowCrudMethods;
+import io.github.asouza.support.FakeCrudRepository;
+import io.github.asouza.support.FakeEntityManager;
+import io.github.asouza.support.Goal;
+import io.github.asouza.support.MyBeanFactory;
+import io.github.asouza.support.NonEntity;
+import io.github.asouza.support.Team;
+import io.github.asouza.support.TestRepositories;
 
 public class FormFlowCrudMethodsTest {
 

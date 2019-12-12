@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAccessor;
@@ -10,10 +10,10 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import br.com.asouza.springwebdevflow.support.ComplexProperty;
-import br.com.asouza.springwebdevflow.support.ComplexPropertyDTO;
-import br.com.asouza.springwebdevflow.support.Team;
 import io.github.asouza.DataView;
+import io.github.asouza.support.ComplexProperty;
+import io.github.asouza.support.ComplexPropertyDTO;
+import io.github.asouza.support.Team;
 
 public class DataViewTest {
 
