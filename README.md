@@ -1,47 +1,46 @@
-# Por que?
+# Why?
 
-Depois de ter participado de diversos projetos web com Spring, eu sinto que tenho um template que eu meio que sempre sigo
-para a construção de todos os endpoints. Isso é ainda mais forte se estamos naquela fase inicial do projeto. Vou deixar
-alguns exemplos aqui:
+After having participated in several web projects with Spring, I feel like I have a template that I kind of always follow
+for building all endpoints. This is even stronger if we are in that early phase of the project. I will leave
+Some examples here:
 
-## Salvar um novo objeto e retornar alguma informação daquele objeto
+## Save a new object and return some information from that object
 
-Meu fluxo é:
+My current flow is:
 
-* Crio uma classe que representa o formulário que vai ser preenchido
-* Nessa classe, que eu gosto de chamar de Form, eu geralmente declaro um método chamado ```toModel```. 
-* Implemento o toModel retornando uma nova instância do objeto de dominio em função dos seus atributos.
-* Pode ser que esse meu formulário tenha ids de outros objetos. Não conto conversa, recebo o repository como argumento
-do toModel e carrego o objeto referente lá dentro.
-* Pode ser que o toModel precise de um objeto extra da aplicação, como um usuário logado. Recebo como argumento também
-* Recebo injetado o Spring Data JPA repository relativo ao objeto de domínio
-* Posso ou não receber o Repository relativo as depências do toModel(isso é um saco e gera distração na classe)
-* Chamo o save
+* I create a class that represents the form that will be filled
+* In this class, which I like to call Form, I usually declare a method called `` `toModel```.
+* I implement toModel by returning a new instance of the domain object as a function of the form itself.
+* It may be that my form has ids from other objects. I do the simplest think I can, I get the repository as argument
+from toModel and load the referring object inside.
+* ToModel may need an extra application object, such as a logged in user. I get as argument too
+* I get injected Spring Data JPA repository for domain object in controller
+* Also gets the other Spring managed dependencies that toModel needs
+* I may or may not receive the Repository regarding toModel depictions (this sucks and generates distraction in the class)
+* I call save
 
-## Preciso gerar um JSON em função de um objeto carregado
+## I need to generate a JSON as a result of a loaded object
 
-* Retornar dados pedidos através de algum endpoint
-
-* Crio uma classe que representa aquele conjunto de dados. Geralmente meto um sufixo DTO e pronto mesmo
-* Recebo no construtor do DTO o objeto de domínio que contém as informações que eu preciso
-* Invoco os métodos de acesso e populo os atributos do DTO
-* De vez em quando precisa usar formatadores de data, dinheiro etc
-* Muitas vezes preciso gerar coleções daquele DTO em função da coleção do objeto de domínio. Lá vou eu fazer 
-  ```colecao.stream().map(...)```
+* I create a class that represents that dataset. I usually put a DTO suffix and that's it
+* I receive the domain object that contains the information I need as constructor parameter 
+I invoke the public methods of the domain object and populate the attributes of the DTO
+* Occasionally I need to use formatters of date, money etc.
+* I often need to generate collections of that DTO as a result of the domain object collection. There I go
+   ```collection.stream (). map (...)```
   
-# Esse é um template que acho eficiente, mas fiquei cansado de repetir
+# This is a template that I find efficient, but I got tired of repeating
 
-Depois de fazer isso muitas vezes, eu comecei a me achar meio que um robô. Eu conseguia programar esses endpoints
-pensando na morte da bezerra. Conversei até com Mauricio Aniche para pensarmos numa possibilidade de criar uma 
-linguagem de programação para desenvolvimento web. Digo, nessa linguagem teria a palavra reservada ```Controller```,
-```Form``` e várias facilidades para o nosso dia a dia. 
+After doing this many times, I started to find myself kind of like a robot. I could program these endpoints
+even when I was distracted. I even talked with a friend of mine, Mauricio Aniche, to think about a possibility to create a
+programming language for web development. I mean, this language would have the reserved word `` `Controller```,
+`` `Form``` and various facilities for our daily lives. 
 
-Como não tenho competência, nesse momento, para criar uma linguagem, resolvi criar uma mini lib com o objetivo de facilitar
-algumas dessas tarefas. 
+As I have no competence at this time to create a language, I decided to create a mini lib in order to facilitate
+some of these tasks. 
 
-# Alguns exemplos de uso
+# Some usage examples
 
-## Geração de jsons
+## JSON generation
 
 ```
 public class DataViewTest {
@@ -119,7 +118,7 @@ public class DataViewTest {
 
 ```
 
-## Salvando um objeto em função de um form que segue meu template de desenvolvimento
+## Saving an object using a form that follows my development template. Just to remember, this form has the ```toModel``` method.
 
 ```
 public class FormFlowTest {
@@ -129,7 +128,7 @@ public class FormFlowTest {
 		TeamFormTest form = new TeamFormTest();
 		form.setName("test");
 		formFlow.save(form).andThen(team -> {
-			//faça o que precisar
+			//do what you need
 		});
 	}
 	
@@ -138,7 +137,7 @@ public class FormFlowTest {
 		TeamFormTest form = new TeamFormTest();
 		form.setName("test");
 		formFlow.save(form,new CustomObject()).andThen(team -> {
-			//faça o que precisar
+			//do what you need
 		});
 	}	
 	
@@ -147,7 +146,7 @@ public class FormFlowTest {
 		TeamFormTest form = new TeamFormTest();
 		form.setName("test");
 		formFlow.save(form).andThenAsync(team -> {
-			//faça o que precisar
+			//do what you need
 		});
 	}	
 	
@@ -155,20 +154,29 @@ public class FormFlowTest {
 
 ```
 
-## Encontre mais exemplos no código de teste
+## Find more examples in the test code
 
-Você pode encontrar mais exemplos no código de teste. Eu também tentei deixar javadoc em todos lugares, tudo com o objetivo
-de facilitar o uso da lib. Veremos :). 
+You can find more examples in the test code. I also tried to leave javadoc everywhere, all aiming
+to facilitate the use of lib. We'll see :). 
 
-Caso tenha gostado e queira colaborar, fala comigo no <a href="https://twitter.com/alberto_souza">twitter</a>.
+If you enjoyed and would like to collaborate, talk to me on
 
-## Caso queira testar por agora
+## If you want to test for now
 
-* Clone o repositório
-* Instale o projeto como dependencia local no seu computador (mvn install a partir da pasta do springwebdev)
-* Adicione a dependencia no seu projeto (já mostro)
-* Caso vá usar o DataView, olhe os exemplos :)
-* Caso vá usar o FormFlow, receba ele injetado no seu controller ```@Autowired FormFlow<AlgumaEntidade> formFlow``` e olhe os exemplos  
+* Clone the repository
+* Install the project as local dependency on your computer (mvn install from springwebdev folder)
+* Add dependency to your project
+* If you are going to use DataView, look at the examples :)
+* If you are going to use FormFlow, get it injected into your `` `@Autowired FormFlow <SomeName> formFlow`` controller and look at the examples.
+
+```
+		<dependency>
+			<groupId>br.com.asouza</groupId>
+			<artifactId>springwebdevflow</artifactId>
+			<version>0.0.1-SNAPSHOT</version>			
+		</dependency>
+
+```  
   
 
   
