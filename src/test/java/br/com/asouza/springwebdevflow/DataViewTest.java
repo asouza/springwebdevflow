@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import br.com.asouza.springwebdevflow.support.ComplexProperty;
 import br.com.asouza.springwebdevflow.support.ComplexPropertyDTO;
 import br.com.asouza.springwebdevflow.support.Team;
+import io.github.asouza.DataView;
 
 public class DataViewTest {
 

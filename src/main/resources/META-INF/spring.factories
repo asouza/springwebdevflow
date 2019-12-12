@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=br.com.asouza.springwebdevflow.autoconfiguration.SpringWebDevAutoconfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.github.asouza.autoconfiguration.SpringWebDevAutoconfiguration

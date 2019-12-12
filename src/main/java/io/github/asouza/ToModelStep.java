@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import javax.persistence.Entity;
 

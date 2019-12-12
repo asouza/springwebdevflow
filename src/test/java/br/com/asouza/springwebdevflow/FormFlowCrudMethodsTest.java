@@ -13,6 +13,7 @@ import br.com.asouza.springwebdevflow.support.MyBeanFactory;
 import br.com.asouza.springwebdevflow.support.NonEntity;
 import br.com.asouza.springwebdevflow.support.Team;
 import br.com.asouza.springwebdevflow.support.TestRepositories;
+import io.github.asouza.FormFlowCrudMethods;
 
 public class FormFlowCrudMethodsTest {
 

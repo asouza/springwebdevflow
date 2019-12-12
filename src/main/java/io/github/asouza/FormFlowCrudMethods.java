@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import java.util.Optional;
 import java.util.function.Function;

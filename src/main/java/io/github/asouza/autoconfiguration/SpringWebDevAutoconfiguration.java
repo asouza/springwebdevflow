@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow.autoconfiguration;
+package io.github.asouza.autoconfiguration;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.Repositories;
 
-import br.com.asouza.springwebdevflow.FormFlow;
-import br.com.asouza.springwebdevflow.FormFlowAsyncExecutor;
+import io.github.asouza.FormFlow;
+import io.github.asouza.FormFlowAsyncExecutor;
 
 @Configuration
 public class SpringWebDevAutoconfiguration implements ApplicationContextAware{

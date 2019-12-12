@@ -1,4 +1,4 @@
-package br.com.asouza.springwebdevflow;
+package io.github.asouza;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
