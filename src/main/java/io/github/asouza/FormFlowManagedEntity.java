@@ -1,7 +1,6 @@
 package io.github.asouza;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FormFlowManagedEntity<T> {
@@ -20,8 +19,13 @@ public class FormFlowManagedEntity<T> {
 		});
 	}
 
-	public void andThen(Consumer<T> consumer) {
-		consumer.accept(entity);
+	public <ReturnType> FormFlowManagedEntity<ReturnType> andThen(Function<T,ReturnType> function) {
+		ReturnType objectToNewFlow = function.apply(entity);
+		return new FormFlowManagedEntity<ReturnType>(objectToNewFlow, flowAsyncExecutor);
+	}
+	
+	public T getEntity() {
+		return entity;
 	}
 	
 
