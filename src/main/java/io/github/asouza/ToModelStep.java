@@ -2,7 +2,8 @@ package io.github.asouza;
 
 import javax.persistence.Entity;
 
-import org.springframework.util.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -15,10 +16,15 @@ public class ToModelStep<T> {
 	private T domainObject;
 	private FormFlowAsyncExecutor flowAsyncExecutor;
 	private FormFlowCrudMethods<T> crudMethods;
+	
+	private static final Logger log = LoggerFactory.getLogger(ToModelStep.class);
+
 
 
 	public ToModelStep(T domainObject,FormFlowCrudMethods<T> crudMethods,FormFlowAsyncExecutor flowAsyncExecutor) {
-		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),"Your domain object must be annotaded with @Entity");
+		if(domainObject.getClass().getAnnotation(Entity.class) == null) {
+			log.info("You are building a ToModelStep without a @Entity annotated object.",domainObject);
+		}
 		this.domainObject = domainObject;
 		this.crudMethods = crudMethods;
 		this.flowAsyncExecutor = flowAsyncExecutor;		

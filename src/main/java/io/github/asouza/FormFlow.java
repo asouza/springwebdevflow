@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +21,7 @@ import org.springframework.util.Assert;
 /**
  * 
  * The entry point of a form flow
+ * 
  * @author alberto
  *
  * @param <T> Type of the Domain Object expecting to be created
@@ -38,14 +40,9 @@ public class FormFlow<T> {
 		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
 
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	/**
-	 * 
-	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T>
-	 * @return The ToModelStep holding the DomainObject 
-	 */
-	public ToModelStep<T> toModel(Object form,Object... extraArgs) {
+	private ToModelStep<T> buildModel(Object form, Function<Class<T>, FormFlowCrudMethods<T>> crudMethodsCreator,
+			Object... extraArgs) {
 		Method[] methods = form.getClass().getMethods();
 		Set<Method> toModels = Stream.of(methods).filter(method -> method.getName().equals("toModel"))
 				.collect(Collectors.toSet());
@@ -57,13 +54,12 @@ public class FormFlow<T> {
 		Class<?>[] parameterTypes = toModelMethod.getParameterTypes();
 
 		List<Object> resolvedParameters = new ArrayList<>();
-		
-		Map<Class<? extends Object>, Object> extraArgsParameters = populateExtraArgsIfExists(extraArgs);		
-		
+
+		Map<Class<? extends Object>, Object> extraArgsParameters = populateExtraArgsIfExists(extraArgs);
 
 		Stream.of(parameterTypes).forEach(parameterType -> {
 			if (extraArgsParameters.containsKey(parameterType)) {
-				log.debug("Resolving extra arg toModel parameter type {}",parameterType);
+				log.debug("Resolving extra arg toModel parameter type {}", parameterType);
 				resolvedParameters.add(extraArgsParameters.get(parameterType));
 			} else {
 				log.debug("testing if Spring is able to lookup {}", parameterType);
@@ -71,7 +67,8 @@ public class FormFlow<T> {
 					resolvedParameters.add(ctx.getBean(parameterType));
 				} catch (NoSuchBeanDefinitionException e) {
 					throw new RuntimeException("You probably need to should call extraArgs before "
-							+ "to supply the custom application params. Or you are requesting extra param which is not resolvable for the Spring Context", e);
+							+ "to supply the custom application params. Or you are requesting extra param which is not resolvable for the Spring Context",
+							e);
 				}
 			}
 		});
@@ -79,12 +76,37 @@ public class FormFlow<T> {
 		try {
 			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());
 			Class<T> domainClass = (Class<T>) domainObject.getClass();
-			return new ToModelStep(domainObject,FormFlowCrudMethods.create(domainClass, repositories, ctx), flowAsyncExecutor);
+			return new ToModelStep(domainObject, crudMethodsCreator.apply(domainClass), flowAsyncExecutor);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	/**
+	 * 
+	 * @param form object that represents a form sent from some client. It must have
+	 *             a toModel method that returns the Domain Object assignable to <T>
+	 * @return The ToModelStep holding the DomainObject
+	 */
+	public ToModelStep<T> toModel(Object form, Object... extraArgs) {
+		return buildModel(form, klass -> {
+			return FormFlowCrudMethods.create(klass, repositories, ctx);
+		}, extraArgs);
+	}
+
+	/**
+	 * 
+	 * @param form object that represents a form sent from some client. It must have
+	 *             a toModel method that returns the Domain Object assignable to <T>
+	 * @return The domain object built by the form
+	 */
+	public T justBuildDomainObject(Object form, Object... extraArgs) {
+		//TODO test me
+		return buildModel(form, klass -> {
+			//just a fake formFlowCrudMethod
+			return new FormFlowCrudMethods<T>(object -> object);
+		}, extraArgs).getDomainObject();
+	}
 
 	private Map<Class<? extends Object>, Object> populateExtraArgsIfExists(Object... extraArgs) {
 		Map<Class<? extends Object>, Object> extraArgsParameters = new HashMap<>();
@@ -96,12 +118,16 @@ public class FormFlow<T> {
 
 	/**
 	 * 
-	 * @param form object that represents a form sent from some client. It must have a toModel method that returns the Domain Object assignable to <T>
-	 * @param extraArgs custom application arguments for toModel. Ex: current logged user 
-	 * @return {@link FormFlowManagedEntity} with saved instance of the Domain Object created from the form
+	 * @param form      object that represents a form sent from some client. It must
+	 *                  have a toModel method that returns the Domain Object
+	 *                  assignable to <T>
+	 * @param extraArgs custom application arguments for toModel. Ex: current logged
+	 *                  user
+	 * @return {@link FormFlowManagedEntity} with saved instance of the Domain
+	 *         Object created from the form
 	 */
-	public FormFlowManagedEntity<T> save(Object form, Object...extraArgs) {
-		return toModel(form,extraArgs).save();
+	public FormFlowManagedEntity<T> save(Object form, Object... extraArgs) {
+		return toModel(form, extraArgs).save();
 	}
 
 }
