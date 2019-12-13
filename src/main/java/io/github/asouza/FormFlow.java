@@ -40,7 +40,7 @@ public class FormFlow<T> {
 		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private T buildModel(Object form, Object... extraArgs) {
 		Method[] methods = form.getClass().getMethods();
 		Set<Method> toModels = Stream.of(methods).filter(method -> method.getName().equals("toModel"))
@@ -65,8 +65,8 @@ public class FormFlow<T> {
 				try {
 					resolvedParameters.add(ctx.getBean(parameterType));
 				} catch (NoSuchBeanDefinitionException e) {
-					throw new RuntimeException("You probably need to should call extraArgs before "
-							+ "to supply the custom application params. Or you are requesting extra param which is not resolvable for the Spring Context",
+					throw new RuntimeException(
+							"You probably are requesting extra param which is not resolvable for the Spring Context",
 							e);
 				}
 			}
@@ -101,7 +101,7 @@ public class FormFlow<T> {
 	 * @return The domain object built by the form
 	 */
 	public T justBuildDomainObject(Object form, Object... extraArgs) {
-		return buildModel(form, extraArgs); 
+		return buildModel(form, extraArgs);
 	}
 
 	private Map<Class<? extends Object>, Object> populateExtraArgsIfExists(Object... extraArgs) {
