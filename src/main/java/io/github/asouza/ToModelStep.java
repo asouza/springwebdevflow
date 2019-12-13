@@ -2,8 +2,7 @@ package io.github.asouza;
 
 import javax.persistence.Entity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * 
@@ -16,28 +15,22 @@ public class ToModelStep<T> {
 	private T domainObject;
 	private FormFlowAsyncExecutor flowAsyncExecutor;
 	private FormFlowCrudMethods<T> crudMethods;
-	
-	private static final Logger log = LoggerFactory.getLogger(ToModelStep.class);
 
 
-
-	public ToModelStep(T domainObject,FormFlowCrudMethods<T> crudMethods,FormFlowAsyncExecutor flowAsyncExecutor) {
-		if(domainObject.getClass().getAnnotation(Entity.class) == null) {
-			log.info("You are building a ToModelStep without a @Entity annotated object.",domainObject);
-		}
+	public ToModelStep(T domainObject, FormFlowCrudMethods<T> crudMethods, FormFlowAsyncExecutor flowAsyncExecutor) {
+		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),
+				String.format("You must build ToModelStep with @Entity annotated class. %s",domainObject.getClass()));
 		this.domainObject = domainObject;
 		this.crudMethods = crudMethods;
-		this.flowAsyncExecutor = flowAsyncExecutor;		
+		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
-	
-	public FormFlowManagedEntity<T> save() {				
-		return new FormFlowManagedEntity<T>(crudMethods.save(domainObject),flowAsyncExecutor);		
+
+	public FormFlowManagedEntity<T> save() {
+		return new FormFlowManagedEntity<T>(crudMethods.save(domainObject), flowAsyncExecutor);
 	}
-	
+
 	public T getDomainObject() {
 		return domainObject;
 	}
-	
-	
 
 }

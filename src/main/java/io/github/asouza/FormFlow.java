@@ -41,8 +41,7 @@ public class FormFlow<T> {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private ToModelStep<T> buildModel(Object form, Function<Class<T>, FormFlowCrudMethods<T>> crudMethodsCreator,
-			Object... extraArgs) {
+	private T buildModel(Object form, Object... extraArgs) {
 		Method[] methods = form.getClass().getMethods();
 		Set<Method> toModels = Stream.of(methods).filter(method -> method.getName().equals("toModel"))
 				.collect(Collectors.toSet());
@@ -75,8 +74,7 @@ public class FormFlow<T> {
 
 		try {
 			T domainObject = (T) toModelMethod.invoke(form, resolvedParameters.toArray());
-			Class<T> domainClass = (Class<T>) domainObject.getClass();
-			return new ToModelStep(domainObject, crudMethodsCreator.apply(domainClass), flowAsyncExecutor);
+			return domainObject;
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
@@ -89,9 +87,11 @@ public class FormFlow<T> {
 	 * @return The ToModelStep holding the DomainObject
 	 */
 	public ToModelStep<T> toModel(Object form, Object... extraArgs) {
-		return buildModel(form, klass -> {
-			return FormFlowCrudMethods.create(klass, repositories, ctx);
-		}, extraArgs);
+		T domainObject = buildModel(form, extraArgs);
+		@SuppressWarnings("unchecked")
+		Class<T> klass = (Class<T>) domainObject.getClass();
+		return new ToModelStep<T>(domainObject, FormFlowCrudMethods.create(klass, repositories, ctx),
+				flowAsyncExecutor);
 	}
 
 	/**
@@ -101,11 +101,7 @@ public class FormFlow<T> {
 	 * @return The domain object built by the form
 	 */
 	public T justBuildDomainObject(Object form, Object... extraArgs) {
-		//TODO test me
-		return buildModel(form, klass -> {
-			//just a fake formFlowCrudMethod
-			return new FormFlowCrudMethods<T>(object -> object);
-		}, extraArgs).getDomainObject();
+		return buildModel(form, extraArgs); 
 	}
 
 	private Map<Class<? extends Object>, Object> populateExtraArgsIfExists(Object... extraArgs) {
