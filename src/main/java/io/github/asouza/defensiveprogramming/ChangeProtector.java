@@ -26,7 +26,9 @@ public class ChangeProtector implements MethodInterceptor {
 		if(method.isAnnotationPresent(Mutable.class)) {
 			throw new IllegalAccessException("You can't invoke a mutable method in this object("+original.getClass()+")");
 		}
-		return method.invoke(original, args);
+		
+		
+		return ImmutableReference.of(method.invoke(original, args));
 	}
 
 }
