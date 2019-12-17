@@ -9,7 +9,8 @@ public class ImmutableReferenceTest {
 		complex.setProperty1(new ComplexProperty());
 		
 		ComplexProperty allImmutable = ImmutableReference.of(complex);
-		allImmutable.setProperty1("bla");
+//		allImmutable.setProperty1("bla");
+		allImmutable.changeProperty();
 		System.out.println(allImmutable.getProperty1());
 	}
 }

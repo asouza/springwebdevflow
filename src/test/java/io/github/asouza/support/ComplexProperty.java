@@ -11,5 +11,10 @@ public class ComplexProperty {
 	public Object getProperty1() {
 		return property1;
 	}
+	
+	@Mutable
+	public void changeProperty() {
+		
+	}
 
 }
