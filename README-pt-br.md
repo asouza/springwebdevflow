@@ -19,7 +19,7 @@ do toModel e carrego o objeto referente lá dentro.
 * Posso ou não receber o Repository relativo as depências do toModel(isso é um saco e gera distração na classe)
 * Chamo o save
 
-## I need to generate a JSON as a result of an object loaded at some endpoint
+## Eu precisa gerar em função de um objeto carregado em algum endpoint
 
 * Crio uma classe que representa aquele conjunto de dados. Geralmente meto um sufixo DTO e pronto mesmo
 * Recebo no construtor do DTO o objeto de domínio que contém as informações que eu preciso
@@ -150,6 +150,123 @@ public class FormFlowTest {
 		});
 	}	
 	
+}
+
+```
+
+## Habilitando um pouco de programação defensiva
+
+```
+
+public class ImmutableReferenceTest {
+
+	@Test
+	public void shouldNotAllowSetterForImmutableReference() {
+		ComplexProperty complex = new ComplexProperty();
+		complex.setProperty1("bla");
+
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.setProperty1("change"));
+	}
+	
+	@Test
+	public void shouldNotAllowMutableAnnnotatedMethodForImmutableReference() {
+		ComplexProperty complex = new ComplexProperty();
+		complex.changeProperty();
+		
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.changeProperty());
+	}
+	
+	@Test
+	public void shouldBuildCollectionWithImmutableObjects() {
+		ComplexProperty complex = new ComplexProperty();
+		
+		Collection<ComplexProperty> list = ImmutableReference.of(Arrays.asList(complex));
+		Assertions.assertThrows(IllegalAccessException.class, () -> list.iterator().next().changeProperty());
+	}
+}
+
+```
+
+```
+
+public class ExecutePreconditionsTest {
+
+	@Test
+	void shouldAddBeanValidationAnnotationAtConstructor() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(UnprotectedEntity.class, ""));
+
+	}
+
+	@Test
+	void shouldValidateAnnotatedConstructorArgs() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(ProtectedEntity.class, ""));
+
+	}
+
+	@Test
+	void shouldCreateValidAnnotatedConstructorArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		Assertions.assertEquals("bla bla", instance.getName());
+
+	}
+
+	@Test
+	void shouldValidateAnnotatedMethodArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.logic(0));
+
+	}
+
+	@Test
+	void shouldExecuteMethodWithValidArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		instance.logic(2);
+
+		Assertions.assertEquals(2, instance.getValue());
+	}
+
+	@Test
+	void shouldNotCreateProtectedInstanceWithoutEmptyConstructors() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(ProtectedEntityWithoutEmptyConstructor.class, "bla bla"));
+	}		
+}
+
+public class UnprotectedEntity {
+	public UnprotectedEntity(String name) {
+
+	}
+}
+
+public class ProtectedEntity {
+
+	private @NotBlank String name;
+	private @Min(1) Integer value;
+
+	public ProtectedEntity() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ProtectedEntity(@NotBlank String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void logic(@Min(1) Integer value) {
+		this.value = value;
+
+	}
+
+	public Integer getValue() {
+		return value;
+	}
 }
 
 ```

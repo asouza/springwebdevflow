@@ -154,6 +154,123 @@ public class FormFlowTest {
 
 ```
 
+## Using defensive programming
+
+```
+
+public class ImmutableReferenceTest {
+
+	@Test
+	public void shouldNotAllowSetterForImmutableReference() {
+		ComplexProperty complex = new ComplexProperty();
+		complex.setProperty1("bla");
+
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.setProperty1("change"));
+	}
+	
+	@Test
+	public void shouldNotAllowMutableAnnnotatedMethodForImmutableReference() {
+		ComplexProperty complex = new ComplexProperty();
+		complex.changeProperty();
+		
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.changeProperty());
+	}
+	
+	@Test
+	public void shouldBuildCollectionWithImmutableObjects() {
+		ComplexProperty complex = new ComplexProperty();
+		
+		Collection<ComplexProperty> list = ImmutableReference.of(Arrays.asList(complex));
+		Assertions.assertThrows(IllegalAccessException.class, () -> list.iterator().next().changeProperty());
+	}
+}
+
+```
+
+```
+
+public class ExecutePreconditionsTest {
+
+	@Test
+	void shouldAddBeanValidationAnnotationAtConstructor() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(UnprotectedEntity.class, ""));
+
+	}
+
+	@Test
+	void shouldValidateAnnotatedConstructorArgs() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(ProtectedEntity.class, ""));
+
+	}
+
+	@Test
+	void shouldCreateValidAnnotatedConstructorArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		Assertions.assertEquals("bla bla", instance.getName());
+
+	}
+
+	@Test
+	void shouldValidateAnnotatedMethodArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.logic(0));
+
+	}
+
+	@Test
+	void shouldExecuteMethodWithValidArgs() throws Exception {
+		ProtectedEntity instance = Preconditions.newInstance(ProtectedEntity.class, "bla bla");
+		instance.logic(2);
+
+		Assertions.assertEquals(2, instance.getValue());
+	}
+
+	@Test
+	void shouldNotCreateProtectedInstanceWithoutEmptyConstructors() throws Exception {
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> Preconditions.newInstance(ProtectedEntityWithoutEmptyConstructor.class, "bla bla"));
+	}		
+}
+
+public class UnprotectedEntity {
+	public UnprotectedEntity(String name) {
+
+	}
+}
+
+public class ProtectedEntity {
+
+	private @NotBlank String name;
+	private @Min(1) Integer value;
+
+	public ProtectedEntity() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ProtectedEntity(@NotBlank String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void logic(@Min(1) Integer value) {
+		this.value = value;
+
+	}
+
+	public Integer getValue() {
+		return value;
+	}
+}
+
+```
+
 ## Find more examples in the test code
 
 You can find more examples in the test code. I also tried to leave javadoc everywhere, all aiming
