@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.util.Assert;
 
+import io.github.asouza.shared.AssertEmptyConstructor;
+
 public final class DataView<T> {
 
 	private T proxy;
@@ -25,10 +27,7 @@ public final class DataView<T> {
 
 	@SuppressWarnings("unchecked")
 	private DataView(T instance) {
-		Optional<Constructor<?>> constructorWithoutArgs = Stream.of(instance.getClass().getConstructors())
-				.filter(constructor -> constructor.getParameterCount() == 0).findFirst();
-
-		Assert.isTrue(constructorWithoutArgs.isPresent(),
+		AssertEmptyConstructor.test(instance.getClass(),
 				"In order to transform an object to a DataView you need to provide an empty constructor. "
 						+ "Just use the Deprecated annotation and everything will be fine :)");
 
@@ -61,7 +60,7 @@ public final class DataView<T> {
 	 *                 pattern.
 	 * @return
 	 */
-	public final DataView<T> add(String key, Function<T, ? extends  Object> function) {
+	public final DataView<T> add(String key, Function<T, ? extends Object> function) {
 		complexValues.put(key, function.apply(original));
 		return this;
 	}
@@ -144,13 +143,14 @@ public final class DataView<T> {
 		return this;
 	}
 
-	/**	 
+	/**
 	 * 
 	 * @param <ReturnType>    type to be used as input for the mapper method
 	 * @param key             custom key to be generated
 	 * @param function        to call the method which follows the Java Beans
 	 *                        pattern.
-	 * @param propertyMappers mappers to each property of the returned object. Do not map here to collection or a application objects  
+	 * @param propertyMappers mappers to each property of the returned object. Do
+	 *                        not map here to collection or a application objects
 	 * @return
 	 */
 	@SafeVarargs
@@ -170,17 +170,18 @@ public final class DataView<T> {
 			Function<ReturnType, Object>... propertyMappers) {
 		DataView<ReturnType> viewOfComplexProperty = DataView.of(complexProperty);
 		for (Function<ReturnType, Object> mapper : propertyMappers) {
-			
+
 			Function<ReturnType, String> onlyAllowedSimpleJavaTypesMapper = object -> {
 				Object mappedProperty = mapper.apply(object);
 				String packageName = mappedProperty.getClass().getPackage().getName();
-				
+
 				boolean isJavaSimpleType = packageName.startsWith("java") && !(mappedProperty instanceof Collection);
-				Assert.isTrue(isJavaSimpleType,"Your mapping is too complex already. Create your custom DTO and use the add method");
-				
+				Assert.isTrue(isJavaSimpleType,
+						"Your mapping is too complex already. Create your custom DTO and use the add method");
+
 				return mapper.apply(object).toString();
 			};
-			
+
 			viewOfComplexProperty.add(onlyAllowedSimpleJavaTypesMapper);
 		}
 		return viewOfComplexProperty;
@@ -213,7 +214,8 @@ public final class DataView<T> {
 	 * @param key             custom key to be generated
 	 * @param function        to call the method which follows the Java Beans
 	 *                        pattern.
-	 * @param propertyMappers mappers to each property of the returned object. Do not map here to collection or a application objects
+	 * @param propertyMappers mappers to each property of the returned object. Do
+	 *                        not map here to collection or a application objects
 	 * @return
 	 */
 	@SafeVarargs
