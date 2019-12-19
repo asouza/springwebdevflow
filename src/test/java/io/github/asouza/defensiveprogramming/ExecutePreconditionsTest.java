@@ -1,13 +1,11 @@
 package io.github.asouza.defensiveprogramming;
 
-import static org.assertj.core.api.Assertions.in;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import io.github.asouza.support.ProtectedEntity;
+import io.github.asouza.support.ProtectedEntityWithoutEmptyConstructor;
+import io.github.asouza.support.UnprotectedEntity;
 
 public class ExecutePreconditionsTest {
 
@@ -51,45 +49,5 @@ public class ExecutePreconditionsTest {
 	void shouldNotCreateProtectedInstanceWithoutEmptyConstructors() throws Exception {
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> Preconditions.newInstance(ProtectedEntityWithoutEmptyConstructor.class, "bla bla"));
-	}
-
-	static class UnprotectedEntity {
-		public UnprotectedEntity(String name) {
-
-		}
-	}
-
-	static class ProtectedEntityWithoutEmptyConstructor {
-
-		public ProtectedEntityWithoutEmptyConstructor(@NotBlank String name) {
-		}
-
-	}
-
-	static class ProtectedEntity {
-
-		private @NotBlank String name;
-		private @Min(1) Integer value;
-
-		public ProtectedEntity() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public ProtectedEntity(@NotBlank String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void logic(@Min(1) Integer value) {
-			this.value = value;
-
-		}
-
-		public Integer getValue() {
-			return value;
-		}
 	}
 }
