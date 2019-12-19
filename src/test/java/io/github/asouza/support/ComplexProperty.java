@@ -16,5 +16,12 @@ public class ComplexProperty {
 	public void changeProperty() {
 		
 	}
+	
+	@Override
+	@Mutable
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
 
 }

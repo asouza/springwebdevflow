@@ -3,27 +3,36 @@ package io.github.asouza.defensiveprogramming;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.github.asouza.support.ComplexProperty;
-import io.github.asouza.support.FormTest;
 
 public class ImmutableReferenceTest {
 
-	public static void main(String[] args) {
+	@Test
+	public void shouldNotAllowSetterForImmutableReference() {
 		ComplexProperty complex = new ComplexProperty();
-		complex.setProperty1(new FormTest());
+		complex.setProperty1("bla");
+
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.setProperty1("change"));
+	}
+	
+	@Test
+	public void shouldNotAllowMutableAnnnotatedMethodForImmutableReference() {
+		ComplexProperty complex = new ComplexProperty();
+		complex.changeProperty();
 		
-		ComplexProperty allImmutable = ImmutableReference.of(complex);
-//		allImmutable.setProperty1("bla");
-//		allImmutable.changeProperty();
-		
-		FormTest complex2 = (FormTest) allImmutable.getProperty1();
-//		complex2.setName("...");
+		ComplexProperty immutable = ImmutableReference.of(complex);
+		Assertions.assertThrows(IllegalAccessException.class, () -> immutable.changeProperty());
+	}
+	
+	@Test
+	public void shouldBuildCollectionWithImmutableObjects() {
+		ComplexProperty complex = new ComplexProperty();
 		
 		Collection<ComplexProperty> list = ImmutableReference.of(Arrays.asList(complex));
-		list.iterator().next().changeProperty();
-		
-		
-		
-
+		Assertions.assertThrows(IllegalAccessException.class, () -> list.iterator().next().changeProperty());
 	}
 }
