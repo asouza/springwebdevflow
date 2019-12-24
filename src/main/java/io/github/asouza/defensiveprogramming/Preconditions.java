@@ -78,9 +78,7 @@ public class Preconditions {
 	
 	@SuppressWarnings("unchecked")
 	/**
-	 * Do not use this method if you have a intention to pass the returned object to some framework which uses reflection to access field directly. 
-	 * You will be dealing with a proxy and, right now, the proxy is created on top of a empty object using the original 
-	 * one to invoke public methods!
+	 * Only use this method if you will call only the public methods of the protected instance.
 	 * 
 	 * @param <T> type of current instance
 	 * @param instance instance which should be protected
