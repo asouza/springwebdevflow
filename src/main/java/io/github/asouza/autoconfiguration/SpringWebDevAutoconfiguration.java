@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.Repositories;
 
 import io.github.asouza.FormFlow;
-import io.github.asouza.FormFlowAsyncExecutor;
 
 @Configuration
 public class SpringWebDevAutoconfiguration implements ApplicationContextAware{
@@ -16,15 +15,10 @@ public class SpringWebDevAutoconfiguration implements ApplicationContextAware{
 	private ApplicationContext applicationContext;
 
 	@Bean
-	public <T> FormFlow<T> create(ApplicationContext context,FormFlowAsyncExecutor asyncExecutor){
-		return new FormFlow<>(context, new Repositories(applicationContext), asyncExecutor);
+	public <T> FormFlow<T> create(ApplicationContext context){
+		return new FormFlow<>(context, new Repositories(applicationContext));
 	}
 	
-	@Bean
-	public FormFlowAsyncExecutor createFormFlowAsyncExecutor() {
-		return new FormFlowAsyncExecutor();
-	}
-
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;

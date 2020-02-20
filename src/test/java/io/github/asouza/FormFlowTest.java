@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
-import io.github.asouza.FormFlow;
-import io.github.asouza.FormFlowAsyncExecutor;
-import io.github.asouza.ToModelStep;
 import io.github.asouza.support.FormTest;
 import io.github.asouza.support.FormTestExtraArgs;
 import io.github.asouza.support.FormTestWithToModelReturningNonEntity;
@@ -30,9 +27,8 @@ public class FormFlowTest {
 	public void setup() {
 		ListableBeanFactory beanFactory = new MyBeanFactory();
 		Repositories repositories = new TestRepositories(beanFactory);
-		FormFlowAsyncExecutor asyncExecutor = new FormFlowAsyncExecutor();
-		formFlow = new FormFlow<>(beanFactory, repositories, asyncExecutor);
-		formFlowNonEntity = new FormFlow<>(beanFactory, repositories, asyncExecutor);
+		formFlow = new FormFlow<>(beanFactory, repositories);
+		formFlowNonEntity = new FormFlow<>(beanFactory, repositories);
 	}
 
 	@Test

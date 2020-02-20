@@ -13,20 +13,18 @@ import org.springframework.util.Assert;
 public class ToModelStep<T> {
 
 	private T domainObject;
-	private FormFlowAsyncExecutor flowAsyncExecutor;
 	private FormFlowCrudMethods<T> crudMethods;
 
 
-	public ToModelStep(T domainObject, FormFlowCrudMethods<T> crudMethods, FormFlowAsyncExecutor flowAsyncExecutor) {
+	public ToModelStep(T domainObject, FormFlowCrudMethods<T> crudMethods) {
 		Assert.notNull(domainObject.getClass().getAnnotation(Entity.class),
 				String.format("You must build ToModelStep with @Entity annotated class. %s",domainObject.getClass()));
 		this.domainObject = domainObject;
 		this.crudMethods = crudMethods;
-		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
 
 	public FormFlowManagedEntity<T> save() {
-		return new FormFlowManagedEntity<T>(crudMethods.save(domainObject), flowAsyncExecutor);
+		return new FormFlowManagedEntity<T>(crudMethods.save(domainObject));
 	}
 
 	public T getDomainObject() {

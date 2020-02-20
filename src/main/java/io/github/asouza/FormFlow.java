@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,14 +29,12 @@ public class FormFlow<T> {
 
 	private BeanFactory ctx;
 	private Repositories repositories;
-	private FormFlowAsyncExecutor flowAsyncExecutor;
 
 	private static final Logger log = LoggerFactory.getLogger(FormFlow.class);
 
-	public FormFlow(BeanFactory ctx, Repositories repositories, FormFlowAsyncExecutor flowAsyncExecutor) {
+	public FormFlow(BeanFactory ctx, Repositories repositories) {
 		this.ctx = ctx;
 		this.repositories = repositories;
-		this.flowAsyncExecutor = flowAsyncExecutor;
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -90,8 +87,7 @@ public class FormFlow<T> {
 		T domainObject = buildModel(form, extraArgs);
 		@SuppressWarnings("unchecked")
 		Class<T> klass = (Class<T>) domainObject.getClass();
-		return new ToModelStep<T>(domainObject, FormFlowCrudMethods.create(klass, repositories, ctx),
-				flowAsyncExecutor);
+		return new ToModelStep<T>(domainObject, FormFlowCrudMethods.create(klass, repositories, ctx));
 	}
 
 	/**

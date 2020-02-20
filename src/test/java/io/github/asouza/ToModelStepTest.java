@@ -1,7 +1,6 @@
 package io.github.asouza;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.asouza.support.NonEntity;
@@ -9,13 +8,6 @@ import io.github.asouza.support.Team;
 
 public class ToModelStepTest {
 
-	private FormFlowAsyncExecutor formFlowAsyncExecutor;
-
-	@BeforeEach
-	public void setup() {
-		formFlowAsyncExecutor = new FormFlowAsyncExecutor();
-	}
-	
 	@Test
 	public void shouldNotAcceptNonEntityAsConstructorParameter() {
 		FormFlowCrudMethods<Team> crudMethods = new FormFlowCrudMethods<Team>((team) -> {
@@ -24,7 +16,7 @@ public class ToModelStepTest {
 		}); 
 		
 		Team newTeam = new Team("bla");
-		new ToModelStep<>(newTeam,crudMethods, formFlowAsyncExecutor).save();
+		new ToModelStep<>(newTeam,crudMethods).save();
 		Assertions.assertEquals(1000l, newTeam.getId());
 	}
 	
@@ -34,7 +26,7 @@ public class ToModelStepTest {
 			return nonEntity;
 		});		
 		
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new ToModelStep<>(new NonEntity(), crudMethods, formFlowAsyncExecutor));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new ToModelStep<>(new NonEntity(), crudMethods));
 	}
 	
 	
