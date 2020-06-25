@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.formflow;
 
 import java.util.Optional;
 import java.util.function.Function;

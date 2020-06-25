@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
-import io.github.asouza.FormFlowCrudMethods;
+import io.github.asouza.formflow.FormFlowCrudMethods;
 import io.github.asouza.support.FakeCrudRepository;
 import io.github.asouza.support.FakeEntityManager;
 import io.github.asouza.support.Goal;

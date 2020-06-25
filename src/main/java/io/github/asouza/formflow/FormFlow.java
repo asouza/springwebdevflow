@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.formflow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

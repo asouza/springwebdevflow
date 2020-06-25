@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
+import io.github.asouza.formflow.FormFlow;
+import io.github.asouza.formflow.ToModelStep;
 import io.github.asouza.support.FormTest;
 import io.github.asouza.support.FormTestExtraArgs;
 import io.github.asouza.support.FormTestWithToModelReturningNonEntity;

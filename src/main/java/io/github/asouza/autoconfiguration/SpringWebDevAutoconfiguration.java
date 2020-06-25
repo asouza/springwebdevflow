@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.Repositories;
 
-import io.github.asouza.FormFlow;
+import io.github.asouza.formflow.FormFlow;
 
 @Configuration
 public class SpringWebDevAutoconfiguration implements ApplicationContextAware{
