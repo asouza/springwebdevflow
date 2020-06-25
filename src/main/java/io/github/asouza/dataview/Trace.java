@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.dataview;
 
 import java.beans.Introspector;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.formflow;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

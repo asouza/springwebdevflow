@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.dataview;
 
 import java.lang.reflect.Constructor;
 import java.text.DecimalFormat;

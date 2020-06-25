@@ -1,4 +1,4 @@
-package io.github.asouza;
+package io.github.asouza.dataview;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAccessor;
@@ -10,7 +10,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.asouza.DataView;
+import io.github.asouza.WithoutEmptyConstructorObject;
+import io.github.asouza.dataview.DataView;
 import io.github.asouza.support.ComplexProperty;
 import io.github.asouza.support.ComplexPropertyDTO;
 import io.github.asouza.support.Team;
