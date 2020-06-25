@@ -1,4 +1,4 @@
-package io.github.asouza.support;
+package io.github.asouza.testsupport;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

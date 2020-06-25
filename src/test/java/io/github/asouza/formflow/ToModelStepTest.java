@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import io.github.asouza.formflow.FormFlowCrudMethods;
 import io.github.asouza.formflow.ToModelStep;
-import io.github.asouza.support.NonEntity;
-import io.github.asouza.support.Team;
+import io.github.asouza.testsupport.NonEntity;
+import io.github.asouza.testsupport.Team;
 
 public class ToModelStepTest {
 

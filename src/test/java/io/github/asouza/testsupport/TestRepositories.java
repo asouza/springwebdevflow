@@ -1,4 +1,4 @@
-package io.github.asouza.support;
+package io.github.asouza.testsupport;
 
 import java.util.HashSet;
 import java.util.Optional;

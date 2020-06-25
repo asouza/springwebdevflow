@@ -8,17 +8,17 @@ import org.springframework.data.repository.support.Repositories;
 
 import io.github.asouza.formflow.FormFlow;
 import io.github.asouza.formflow.ToModelStep;
-import io.github.asouza.support.FormTest;
-import io.github.asouza.support.FormTestExtraArgs;
-import io.github.asouza.support.FormTestWithToModelReturningNonEntity;
-import io.github.asouza.support.FormTestWithToModelWithoutArgs;
-import io.github.asouza.support.FormTestWithTwoResolvableTypes;
-import io.github.asouza.support.FormTestWithTwoToModels;
-import io.github.asouza.support.FormTestWithoutToModel;
-import io.github.asouza.support.MyBeanFactory;
-import io.github.asouza.support.NonEntity;
-import io.github.asouza.support.Team;
-import io.github.asouza.support.TestRepositories;
+import io.github.asouza.testsupport.FormTest;
+import io.github.asouza.testsupport.FormTestExtraArgs;
+import io.github.asouza.testsupport.FormTestWithToModelReturningNonEntity;
+import io.github.asouza.testsupport.FormTestWithToModelWithoutArgs;
+import io.github.asouza.testsupport.FormTestWithTwoResolvableTypes;
+import io.github.asouza.testsupport.FormTestWithTwoToModels;
+import io.github.asouza.testsupport.FormTestWithoutToModel;
+import io.github.asouza.testsupport.MyBeanFactory;
+import io.github.asouza.testsupport.NonEntity;
+import io.github.asouza.testsupport.Team;
+import io.github.asouza.testsupport.TestRepositories;
 
 public class FormFlowTest {
 

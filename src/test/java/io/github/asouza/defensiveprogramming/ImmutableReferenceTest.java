@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.asouza.support.ComplexProperty;
+import io.github.asouza.testsupport.ComplexProperty;
 
 public class ImmutableReferenceTest {
 

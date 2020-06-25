@@ -1,4 +1,4 @@
-package io.github.asouza.support;
+package io.github.asouza.testsupport;
 
 import javax.persistence.Entity;
 

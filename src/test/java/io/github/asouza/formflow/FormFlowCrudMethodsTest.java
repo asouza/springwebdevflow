@@ -7,13 +7,13 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.data.repository.support.Repositories;
 
 import io.github.asouza.formflow.FormFlowCrudMethods;
-import io.github.asouza.support.FakeCrudRepository;
-import io.github.asouza.support.FakeEntityManager;
-import io.github.asouza.support.Goal;
-import io.github.asouza.support.MyBeanFactory;
-import io.github.asouza.support.NonEntity;
-import io.github.asouza.support.Team;
-import io.github.asouza.support.TestRepositories;
+import io.github.asouza.testsupport.FakeCrudRepository;
+import io.github.asouza.testsupport.FakeEntityManager;
+import io.github.asouza.testsupport.Goal;
+import io.github.asouza.testsupport.MyBeanFactory;
+import io.github.asouza.testsupport.NonEntity;
+import io.github.asouza.testsupport.Team;
+import io.github.asouza.testsupport.TestRepositories;
 
 public class FormFlowCrudMethodsTest {
 

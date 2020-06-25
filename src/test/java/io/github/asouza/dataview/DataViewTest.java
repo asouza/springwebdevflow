@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import io.github.asouza.WithoutEmptyConstructorObject;
 import io.github.asouza.dataview.DataView;
-import io.github.asouza.support.ComplexProperty;
-import io.github.asouza.support.ComplexPropertyDTO;
-import io.github.asouza.support.Team;
+import io.github.asouza.testsupport.ComplexProperty;
+import io.github.asouza.testsupport.ComplexPropertyDTO;
+import io.github.asouza.testsupport.Team;
 
 public class DataViewTest {
 

@@ -1,4 +1,6 @@
-package io.github.asouza.support;
+package io.github.asouza.testsupport;
+
+import io.github.asouza.support.Mutable;
 
 public class ComplexProperty {
 	

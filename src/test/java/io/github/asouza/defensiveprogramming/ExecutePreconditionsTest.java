@@ -3,9 +3,9 @@ package io.github.asouza.defensiveprogramming;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.asouza.support.ProtectedEntity;
-import io.github.asouza.support.ProtectedEntityWithoutEmptyConstructor;
-import io.github.asouza.support.UnprotectedEntity;
+import io.github.asouza.testsupport.ProtectedEntity;
+import io.github.asouza.testsupport.ProtectedEntityWithoutEmptyConstructor;
+import io.github.asouza.testsupport.UnprotectedEntity;
 
 public class ExecutePreconditionsTest {
 
