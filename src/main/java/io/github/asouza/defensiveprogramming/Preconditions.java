@@ -49,7 +49,7 @@ public class Preconditions {
 
 		try {
 			Constructor<T> constructor = klass.getConstructor(parameterTypes);
-			ExecutableValidator executableValidator = (ExecutableValidator) validator;
+			ExecutableValidator executableValidator = validator.forExecutables();
 			Set<ConstraintViolation<T>> violations = executableValidator.validateConstructorParameters(constructor,
 					args);
 			Assert.isTrue(violations.isEmpty(),
